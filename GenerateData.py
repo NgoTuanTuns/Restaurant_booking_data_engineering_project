@@ -145,5 +145,6 @@ def generate_data():
     booking_table['Order'] = orderfood
 
     booking_table['Is_Birthdate'] = random.choice([True, False])
-    print(booking_table)
-generate_data()
+    return booking_table
+
+
