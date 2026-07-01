@@ -1,28 +1,17 @@
-from flask import Flask, render_template_string, jsonify
+from flask import Flask, render_template_string
 from SendData import send_data
 from GenerateData import generate_data
+
 app = Flask(__name__)
 
-# ============================================================
-# 👉 HÀM BẠN SẼ TỰ THÊM LOGIC VÀO ĐÂY
-# ============================================================
+
 def book_table():
-    """
-    Hàm này được gọi mỗi khi người dùng bấm nút "Đặt bàn".
-    Bạn có thể thêm logic thật ở đây, ví dụ:
-    - Ghi vào database
-    - Gửi email/SMS xác nhận
-    - Gọi API bên thứ ba
-    """
     data = generate_data()
     send_data(data)
     print("Đã nhận yêu cầu đặt bàn!")
     return {"status": "success", "message": "Đặt bàn thành công!"}
 
 
-# ============================================================
-# Giao diện web (HTML đơn giản, có 1 nút)
-# ============================================================
 HTML_PAGE = """
 <!DOCTYPE html>
 <html lang="vi">
@@ -50,23 +39,56 @@ HTML_PAGE = """
             cursor: pointer;
         }
         button:hover { background: #a93226; }
-        #result { margin-top: 20px; font-size: 16px; color: #333; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🍽️ Nhà hàng ABC</h1>
-        <button onclick="bookTable()">Đặt bàn</button>
-        <div id="result"></div>
+        <form action="/book" method="POST">
+            <button type="submit">Đặt bàn</button>
+        </form>
     </div>
+</body>
+</html>
+"""
 
-    <script>
-        async function bookTable() {
-            const res = await fetch('/book', { method: 'POST' });
-            const data = await res.json();
-            document.getElementById('result').innerText = data.message;
+RESULT_PAGE = """
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Kết quả đặt bàn</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #f5f0e8;
+            font-family: Arial, sans-serif;
         }
-    </script>
+        .container { text-align: center; }
+        .icon { font-size: 48px; }
+        .message { font-size: 20px; margin: 16px 0; color: {{ color }}; }
+        a {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 10px 24px;
+            background: #c0392b;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+        a:hover { background: #a93226; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">{{ icon }}</div>
+        <div class="message">{{ message }}</div>
+        <a href="/">Quay lại trang đặt bàn</a>
+    </div>
 </body>
 </html>
 """
@@ -79,8 +101,21 @@ def index():
 
 @app.route("/book", methods=["POST"])
 def book():
-    result = book_table()  # gọi hàm Python của bạn
-    return jsonify(result)
+    try:
+        result = book_table() 
+        return render_template_string(
+            RESULT_PAGE,
+            icon="✅",
+            message=result.get("message", "Đặt bàn thành công!"),
+            color="#27ae60",
+        )
+    except Exception as e:
+        return render_template_string(
+            RESULT_PAGE,
+            icon="❌",
+            message=f"Đặt bàn thất bại: {e}",
+            color="#c0392b",
+        )
 
 
 if __name__ == "__main__":
