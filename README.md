@@ -137,11 +137,11 @@ Open `http://127.0.0.1:5000`, click **Đặt bàn** to send a booking event to E
 Upload notebooks in `Databricks_pyspark/` to your Databricks workspace and run in order:
 
 ```
-00_setup.py       → Create catalog & schemas (run once)
-03_dim_setup.py   → Seed dimension tables (run once)
-01_ingest.py      → Start Bronze stream
-02_transform.py   → Start Silver stream
-04_load_gold.py   → Load Gold dim/fact tables
+ingestion.py     # Event Hubs → Bronze table (raw stream)
+transform.py  # Bronze → Silver (parse, validate, enrich)
+dim_fact_setup.ipynb  # Seed dimension tables + create fact table schema
+dim_food_setup.py      # Create catalog, schemas
+load.py  # Silver → Gold (star schema: dim/fact tables)
 ```
 
 ---
