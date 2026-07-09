@@ -66,13 +66,9 @@ silver.bookings
 ├── client_name
 ├── table_types
 ├── booking_time        (parsed timestamp)
-├── booking_date        (derived from booking_time)
-├── booking_hour        (derived)
-├── is_peak_hour        (true if 11–13h or 17–20h)
 ├── num_of_individuals
 ├── is_birthdate
 ├── order               (MapType: food category → list of foods)
-└── ingested_at
 ```
 
 ### Gold — Star Schema
@@ -185,6 +181,5 @@ ORDER BY total DESC;
 - **Structured Streaming** with `trigger(availableNow=True)` for Databricks Community Edition compatibility
 - **Dead letter handling** — invalid events filtered to separate table for debugging
 - **MERGE (upsert)** on fact tables to prevent duplicate records across pipeline runs
-- **Schema validation** at Silver layer — null checks on critical fields (`client_name`, `booking_time`, `num_of_individuals > 0`)
 - **Order column exploded** from `MapType(String, Array(String))` into `fact_booking_order` for queryability
 - **Separate checkpoints** per streaming job to avoid `DELTA_INVALID_SOURCE_VERSION` conflicts
