@@ -11,8 +11,11 @@ FOOD_TYPES = [
     "Món chay",
     "Đồ nướng / BBQ",
     "Lẩu / Canh",
+    "Món chính Việt Nam",
+    "Món chính Châu Á",
+    "Món chính Phương Tây",
+    "Món tráng miệng"
 ]
-
 
 FOOD = {
     "Trái cây": [
@@ -100,7 +103,7 @@ FOOD = {
         "Canh rong biển", "Súp cua",
     ],
 }
-TABLE_TYPES = ['Bình thường', 'Riêng Tư', 'VIP', 'VVIP']
+TABLE_TYPES = ['Bình thường', 'Riêng tư', 'VIP', 'VVIP', 'Ngoài trời']
 CLIENT_NAME = ['Tú', 'Tuấn', 'Phát', 'Quân', 'Tài', 'Sang', 'Việt']
 def generate_data():
     booking_table = {}
